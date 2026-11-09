@@ -1,0 +1,59 @@
+digraph ER {
+  graph [rankdir=LR, fontname="Helvetica", bgcolor="white", nodesep=0.6, ranksep=1.0, pad=0.4];
+  node [shape=plaintext, fontname="Helvetica", fontsize=11];
+  edge [fontname="Helvetica", fontsize=10, color="#555555", arrowhead=none];
+
+  STUDENTS [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#1F4A7A"><FONT COLOR="white"><B>STUDENTS</B></FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><B>PK</B> student_id</TD></TR>
+    <TR><TD ALIGN="LEFT">roll_no (UQ)</TD></TR><TR><TD ALIGN="LEFT">full_name</TD></TR>
+    <TR><TD ALIGN="LEFT">email (UQ)</TD></TR><TR><TD ALIGN="LEFT">phone</TD></TR>
+    <TR><TD ALIGN="LEFT">department</TD></TR><TR><TD ALIGN="LEFT">created_at</TD></TR></TABLE>>];
+
+  USERS [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#6C7A89"><FONT COLOR="white"><B>USERS (login)</B></FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><B>PK</B> user_id</TD></TR>
+    <TR><TD ALIGN="LEFT">username (UQ)</TD></TR><TR><TD ALIGN="LEFT">password_hash</TD></TR>
+    <TR><TD ALIGN="LEFT">role (OWNER/CUSTOMER)</TD></TR><TR><TD ALIGN="LEFT"><B>FK</B> student_id</TD></TR>
+    <TR><TD ALIGN="LEFT">full_name</TD></TR></TABLE>>];
+
+  ORDERS [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#F2994A"><FONT COLOR="white"><B>ORDERS</B></FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><B>PK</B> order_id</TD></TR>
+    <TR><TD ALIGN="LEFT"><B>FK</B> student_id</TD></TR><TR><TD ALIGN="LEFT">order_date</TD></TR>
+    <TR><TD ALIGN="LEFT">status</TD></TR><TR><TD ALIGN="LEFT">total_amount</TD></TR>
+    <TR><TD ALIGN="LEFT">notes</TD></TR></TABLE>>];
+
+  PAYMENTS [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#2E9E5B"><FONT COLOR="white"><B>PAYMENTS</B></FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><B>PK</B> payment_id</TD></TR>
+    <TR><TD ALIGN="LEFT"><B>FK</B> order_id (UQ)</TD></TR><TR><TD ALIGN="LEFT">amount</TD></TR>
+    <TR><TD ALIGN="LEFT">method (CASH/ONLINE)</TD></TR><TR><TD ALIGN="LEFT">status</TD></TR>
+    <TR><TD ALIGN="LEFT">created_at, paid_at</TD></TR></TABLE>>];
+
+  ORDER_DETAILS [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#8E44AD"><FONT COLOR="white"><B>ORDER_DETAILS</B></FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><B>PK</B> detail_id</TD></TR>
+    <TR><TD ALIGN="LEFT"><B>FK</B> order_id</TD></TR><TR><TD ALIGN="LEFT"><B>FK</B> food_id</TD></TR>
+    <TR><TD ALIGN="LEFT">quantity</TD></TR><TR><TD ALIGN="LEFT">unit_price</TD></TR>
+    <TR><TD ALIGN="LEFT">line_total</TD></TR></TABLE>>];
+
+  FOOD_ITEMS [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#E0533D"><FONT COLOR="white"><B>FOOD_ITEMS</B></FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><B>PK</B> food_id</TD></TR>
+    <TR><TD ALIGN="LEFT">food_name (UQ)</TD></TR><TR><TD ALIGN="LEFT"><B>FK</B> category_id</TD></TR>
+    <TR><TD ALIGN="LEFT">price</TD></TR><TR><TD ALIGN="LEFT">availability (Y/N)</TD></TR>
+    <TR><TD ALIGN="LEFT">image_path</TD></TR><TR><TD ALIGN="LEFT">description</TD></TR></TABLE>>];
+
+  CATEGORIES [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#FFB800"><B>CATEGORIES</B></TD></TR>
+    <TR><TD ALIGN="LEFT"><B>PK</B> category_id</TD></TR>
+    <TR><TD ALIGN="LEFT">category_name (UQ)</TD></TR><TR><TD ALIGN="LEFT">description</TD></TR></TABLE>>];
+
+  STUDENTS -> USERS [label="1 : 0..1  has login", taillabel="1", headlabel="0..1"];
+  STUDENTS -> ORDERS [label="places", taillabel="1", headlabel="N"];
+  ORDERS -> PAYMENTS [label="paid by", taillabel="1", headlabel="1"];
+  ORDERS -> ORDER_DETAILS [label="contains", taillabel="1", headlabel="N"];
+  FOOD_ITEMS -> ORDER_DETAILS [label="ordered in", taillabel="1", headlabel="N"];
+  CATEGORIES -> FOOD_ITEMS [label="groups", taillabel="1", headlabel="N"];
+}
